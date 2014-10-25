@@ -44,15 +44,16 @@ close TSV;
 
 
 my $image = Graphics::Magick->new;
-$image->Set(size=>'390x828');
-$image->Read('mapa_2.jpg');
+$image->Set(size=>'828x828');
+$image->Read('mapa_3.jpg');
 my $base = Graphics::Magick->new;
-$base->Set(size=>'390x828');
-$base->Read('mapa_2.jpg');
+$base->Set(size=>'828x828');
+$base->Read('mapa_3.jpg');
 
 my$prevfecha=0;
 my$r;
 my$c=0;
+my$line = 250;
 foreach my$t(@tsv){
     if($prevfecha && (!($prevfecha eq $t->{fecha}))){
         $image->Annotate(font=>'/usr/share/fonts/truetype/ttf-isabella/Isabella.ttf', pointsize=>30,
@@ -66,9 +67,10 @@ foreach my$t(@tsv){
         die $r if $r;
         $prevfecha = $t->{fecha};
         $image->Draw(fill=>"white", stroke=>"white",
-                     primitive=>"polygon", points=>"0,0,0,828,390,828,390,0");
+                     primitive=>"polygon", points=>"0,0,0,828,828,828,828,0");
         $image->Composite(image=>$base, compose=>'Over', x=>0, 'y'=>0, opacity=>100);
         #$image->Read('mapa_2.jpg');
+        $line = 250;
         $c++;
     }elsif(!$prevfecha){
         $prevfecha = $t->{fecha};
@@ -80,12 +82,16 @@ foreach my$t(@tsv){
         close TMP;
         $t->{granizo} = `cat /tmp/render.tmp | dbacl -v -c ./train3/models/granizo -c ./train3/models/normal` eq "granizo\n";
         if($t->{granizo}){
-            $image->Draw(fill=>"#333333", stroke=>"black",
+            $image->Draw(fill=>"#000077", stroke=>"black",
                          primitive=>"polygon", points=>$prv{$t->{provincia}});
+            $image->Annotate(font=>'/usr/share/fonts/truetype/ttf-isabella/Isabella.ttf', pointsize=>20,
+                             fill=>"#000077", stroke=>"black",
+                             text=>$t->{titulo}, 'y' => $line, x=>300);
+            $line += 50;
         }
         print $t->{fechahora}."\t".$t->{provincia}."\t".$t->{titulo}."\n" if($t->{granizo});
     }
 }
 $r = $image->Write(filename=>"frames/$c.$prevfecha.jpg", compression=>"jpeg", quality=>9);
 
-`mencoder "mf://frames/*.jpg" -mf fps=43 -o render.avi -ovc lavc -lavcopts vcodec=mpeg4`;
+`mencoder "mf://frames/*.jpg" -mf fps=20 -o render.avi -ovc lavc -lavcopts vcodec=mpeg4`;

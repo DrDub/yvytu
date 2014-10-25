@@ -12,6 +12,7 @@ Events:
 * frost (planned)
 * flood (planned)
 
+
 API access
 ----------
 
@@ -29,11 +30,19 @@ $ curl http://localhost/yvytu/api/?q=ola+ke+ase
 $ 
 </pre>
 
+
+About the name
+--------------
+
+The word yvytu is Guarani for "wind".
+
+
 Authors
 -------
 
 * Yanina Bellini (yabellini@gmail.com)
 * Pablo Duboue (pablo.duboue@gmail.com)
+
 
 License
 -------
