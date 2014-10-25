@@ -18,7 +18,16 @@ API access
 Drop the api/ folder in a web server with PHP. Set the path to the
 models and dbacl.
 
-Se the title as the GET variable 'q'
+Set the title as the GET variable 'q'
+
+For example:
+
+<pre>
+$ curl http://localhost/yvytu/api/?q=fuertes+lluvias+crean+grandes+problemas+con+el+granizo
+granizo
+$ curl http://localhost/yvytu/api/?q=ola+ke+ase
+$ 
+</pre>
 
 Authors
 -------
